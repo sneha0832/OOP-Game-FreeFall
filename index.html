@@ -1,0 +1,798 @@
+<!doctype html>
+<html>
+<head>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Slackey&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+
+<title> Food Fall</title>
+
+<!-- import external .js scripts here -->
+
+<!-- <script type="text/javascript" src="#" ></script> -->
+
+<!-- modify CSS properties here -->
+
+<style type="text/css">
+body,td,th {
+font-family: "Slackey", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+font-size: 14px;
+color: rgba(255,255,255,1);
+}
+
+body {
+background-color: rgba(0,0,0,1);
+}
+
+#container {
+position: relative;
+text-align: left;
+width: 95%;
+height: 800px;
+}
+
+#fmxCanvas {
+position: relative;
+background-color:rgba(255,255,255,1);
+border: rgba(255,255,255,1) thin dashed;
+margin: 10px;
+cursor: crosshair;
+display: inline-block;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div id="container">
+<!-- START HTML CODE HERE -->
+
+<canvas id="fmxCanvas" width="800" height="600"></canvas>
+
+<div id="display"></div>
+
+<br><br>
+	
+	<audio width="300" controls id="fruit">
+
+	<source src="audio/fruit.mp4" type="audio/mpeg" />
+    
+</audio>
+	
+	<audio width="300" controls id="end">
+
+	<source src="audio/end.mp4" type="audio/mpeg" />
+    
+</audio>
+	
+<img src="img/apple.png" width="60px" id="apple">
+<img src="img/avacado.png" width="60px" id="avacado">
+<img src="img/carrot.png" width="60px" id="carrot">
+<img src="img/egg.png" width="60px" id="egg">
+<img src="img/lettuce.png" width="60px" id="lettuce">
+<img src="img/pizza.png" width="60px" id="pizza">
+<img src="img/strawberry.png" width="60px" id="strawberry">
+<img src="img/yogurt.png" width="60px" id="yogurt">
+	
+<img src="img/basket.png" width="100px" id="basket">	
+	
+<img  src="img/bkgd1.png" width="700" id="bkgd1">
+<img  src="img/bkgd2.png" width="700" id="bkgd2">
+<img  src="img/bkgd3.png" width="700" id="bkgd3">
+<img  src="img/bkgd4.png" width="700" id="bkgd4">
+<img  src="img/bkgd5.png" width="700" id="bkgd5">
+<img  src="img/bkgd6.png" width="700" id="bkgd6">
+	
+<img src="img/end.png" id ="end2">
+
+Add your personal notes or additional information here
+
+<!-- FINISH HTML CODE HERE -->
+</div>
+
+<script>
+
+///////////////////////////////////////////////////////////////////////
+// DECLARE requestAnimFrame
+
+var rAF = window.requestAnimFrame ||
+window.mozRequestAnimFrame ||
+window.webkitRequestAnimFrame ||
+window.msRequestAnimFrame;
+
+var fps = 30;
+
+window.requestAnimFrame = (
+
+function(callback) {
+
+return rAF ||
+
+function(callback) {
+window.setTimeout(callback, 1000 / fps);
+};
+
+})();
+
+///////////////////////////////////////////////////////////////////////
+// DEFINE GLOBAL VARIABLES HERE
+
+var canvas;
+var ctx;
+canvas = document.getElementById("fmxCanvas");
+ctx = canvas.getContext("2d");
+
+var canvas1;
+var ctx1;
+canvas1 = document.createElement("canvas");
+ctx1 = canvas1.getContext("2d");
+
+canvas1.width = canvas.width;
+canvas1.height = canvas.height;
+
+var canvas2;
+var ctx2;
+canvas2 = document.createElement("canvas");
+ctx2 = canvas2.getContext("2d");
+
+canvas2.width = canvas.width;
+canvas2.height = canvas.height;
+
+var display;
+display = document.getElementById('display');
+
+var counter;
+
+///////////////////////////////////////////////////////////////////////
+// DEFINE YOUR GLOBAL VARIABLES HERE
+	var apple = new Image();
+		apple = document.getElementById('apple');
+
+	var avacado = new Image();
+		avacado = document.getElementById('avacado');
+
+	var carrot = new Image();
+		carrot = document.getElementById('carrot');
+
+	var egg = new Image();
+		egg = document.getElementById('egg');
+
+	var lettuce = new Image();
+		lettuce = document.getElementById('lettuce');
+
+	var pizza = new Image();
+		pizza = document.getElementById('pizza');
+
+	var strawberry = new Image();
+		strawberry = document.getElementById('strawberry');
+
+	var yogurt = new Image();
+		yogurt = document.getElementById('yogurt');
+
+	var basket= new Image();
+		basket = document.getElementById('basket');
+
+	var food = new Array();
+		food = [apple,avacado,carrot,egg,lettuce,pizza,strawberry,yogurt];
+	
+	var bkgd1= new Image();
+		bkgd1 = document.getElementById('bkgd1');
+	
+	var bkgd2= new Image();
+		bkgd2 = document.getElementById('bkgd2');
+	
+	var bkgd3= new Image();
+		bkgd3 = document.getElementById('bkgd3');
+	
+	var bkgd4= new Image();
+		bkgd4 = document.getElementById('bkgd4');
+	
+	var bkgd5= new Image();
+		bkgd5 = document.getElementById('bkgd5');
+	
+	var bkgd6= new Image();
+		bkgd6 = document.getElementById('bkgd6');
+	
+	var background = new Array();
+	var background = [bkgd1,bkgd2,bkgd3,bkgd5,bkgd6];
+	
+	var end2 = new Image();
+		end2 = document.getElementById('end2');
+	
+	/// THIS IS THE CONTAINER FOR ALL MY THINGS
+
+	  var things = new Array();
+	  
+	  var amount;  // how many things do you want to create
+	  
+	  var globalScore;
+	  
+	  var level;
+	  
+	  var timer;
+	  
+	  var youLose;
+	  
+	  var startGame;
+	
+	var pizzaCaught = 0;
+
+
+
+///////////////////////////////////////////////////////////////////////
+// CALL THE EVENT LISTENERS
+
+window.addEventListener("load", setup, false);
+	
+	
+
+// >>>>>>>>>>>>>> NEW
+
+window.addEventListener("click", startGameF, false);	
+	
+
+//////////////////////////////////////////////////////////////////////
+// ADD EVENT LISTENERS
+
+canvas.addEventListener("mousemove", mousePos, false);
+	
+	
+
+//////////////////////////////////////////////////////////////////////
+// MOUSE COORDINATES
+
+var stage, mouseX, mouseY;
+
+function mousePos(event) {
+stage = canvas.getBoundingClientRect();
+mouseX = event.clientX - stage.left;
+mouseY = event.clientY - stage.top;
+}
+	
+	
+////////// ADDITIONAL FUNCTIONS >>>>> NEW
+
+///// START GAME
+
+	function startGameF() {
+		startGame = 1; // FLAG 
+		//document.getElementById('audio1').play();
+		if ( youLose == 1) {
+			resetGame();
+		}
+	}
+	
+
+	
+	
+	function resetGame() {
+			things = new Array();
+			amount  = 0;  
+			globalScore = 5;
+			level = 0;
+			timer = 20;
+			youLose = 0;
+			startGame = 0;
+			missed= 0;
+	}
+
+	
+	function drawBkgd() {
+		 //ctx.drawImage(bkgd, 0,0,canvas.width, canvas.height);
+		// % modulus 
+		// calcualtes step by step from 0 to backgrounds.length
+		var l = level % background.length ;
+		//ctx.rect(0,0,800,600);
+		ctx.drawImage(background[l], 0,0,canvas.width, canvas.height);
+	}
+	
+
+	function drawButterfly() {
+
+		// var fly = Math.floor( Math.random() * butterflies.length);
+		//var fly = level % butterflies.length;
+			ctx.drawImage(basket, mouseX - basket.width/2, canvas.height - 100 );  
+		//	ctx.drawImage(butterflies[fly], mouseX - butterfly.width/2, mouseY - butterfly.height/2);
+	}	
+	
+	
+	
+	function drawThings() {
+		// OOP STANDS FOR OBJECT ORIENTED PROGRAMMING
+
+		//console.log = flowers.length ;
+
+
+			for (var j=0; j<things.length; j++) {
+	
+		// /WE ARE GOING TO MAKE THEM MOVE VERTICALLY, INDIVIDUALLY
+
+			if (
+				things[j].y > canvas.height + things[j].h ||
+				things[j].x < -things[j].w ||
+				things[j].x > canvas.width + things[j].w
+			) {
+				if (youLose === 0) {
+					globalScore -= 2;
+					missed ++;
+					if (globalScore < 0) {
+						youLose = 1;
+					}
+				}
+				things.splice(j, 1);
+				j--;
+				continue;
+			}
+
+			things[j].x += things[j].spx;
+			things[j].y += things[j].spy;
+
+			// gravity
+			things[j].spy += 0.3; // gravity strength
+
+			ctx.save();
+
+			ctx.translate(things[j].x, things[j].y);
+
+			ctx.rotate(things[j].rt + counter );
+
+			ctx.drawImage(  food[things[j].n], 
+							-things[j].w/2, 
+							-things[j].h/2, 
+							things[j].w, 
+							things[j].h );
+
+			ctx.restore();
+
+		}
+
+	}	
+	
+	
+	//////////////////////////////
+
+	function checkThings() {
+
+		// TIMER GOES DOWN
+
+		//timer -= 0.1;
+//		if (timer <= 0) {
+//			youLose = 1;
+//		}
+		
+				// TIMER GOES DOWN
+		timer -= 0.1;
+
+    // Check for timer reaching zero
+    if (timer <= 0) {
+        amount += 20;
+        level++;
+        timer = 20;
+        spawnThing();
+    }
+
+    // Check if player missed too many items
+//    if (pizzaCaught >= 5) {
+//        youLose = 1;
+//        return;
+//    }
+
+
+		// OBJECTS
+		for (var k=0; k<things.length; k++) {
+	/// CALCULATE THE DISTANCE BETWEEN THE MOUSE AND EACH thing
+			var A = mouseX - things[k].x;
+			// var B = mouseY - things[k].y;
+			// in case the things fall from the top of the canvas
+			// use the static Y position of the catcher
+			var B = canvas.height - 20 - things[k].y;
+
+			//var D = Math.sqrt( Math.pow(A,2) + Math.pow(B,2) );
+
+			var D = Math.sqrt( A*A + B*B );
+
+			//  average between the width and height
+
+
+			var WH = ( things[k].w + things[k].h ) / 2; 
+
+			if ( D < WH && things[k].y > 400 ) { 
+
+			// globalScore ++;
+			globalScore += things[k].e; // increase by energy
+
+		if ( globalScore < 0) {
+			youLose = 1; // flag
+		}
+
+			document.getElementById('fruit').currentTime = 0; // rewind if needed
+document.getElementById('fruit').play();
+
+
+	// REMOVE THE THING AT THE VERY END!!!!!! NOT BEFORE
+	// splice removes 1 object at index k from the Array things
+				
+				if (things[k].n === 5) { // 5 = pizza
+				pizzaCaught++;
+					document.getElementById('end').play();
+				if (pizzaCaught >= 5) {
+					youLose = 1; // end the game
+				}
+			}
+
+				things.splice(k,1);
+
+			}
+		}
+		
+//		if (things.length == 0) {
+//
+//					amount +=5 ;
+//					level ++;
+//					timer = 60;
+//					spawnThing();
+//					//createThings();
+//
+//		}
+//		
+		
+	}
+
+	
+	/////////////////////////////
+
+	function drawStartScreen() {
+
+		  //ctx.drawImage(bkgdstart, 0,0,canvas.width, canvas.height);
+		ctx.save();
+		ctx.beginPath();
+		 ctx.drawImage(bkgd4,0,0);
+		  //ctx.rect(0,0,800,600);
+		ctx.closePath();
+		ctx.fillStyle = "blue";
+		//ctx.fill();
+		
+		ctx.save();
+		ctx.beginPath();
+		ctx.filter = "blur(30px)";
+		ctx.rect(60,402,700,110);
+		ctx.closePath();
+		ctx.fillStyle = "white";
+		ctx.fill();
+		ctx.restore();
+		
+		ctx.beginPath();
+		ctx.shadowColor="black";
+		ctx.shadowOffsetX = 7;
+		ctx.shadowOffsetY = 7;
+		ctx.drawImage(carrot,159,402,70,100);
+		ctx.closePath();
+		
+			
+		ctx.beginPath();
+		ctx.shadowColor="black";
+		ctx.shadowOffsetX = 7;
+		ctx.shadowOffsetY = 7;
+		ctx.drawImage(yogurt,60,402,70,100);
+		ctx.closePath();
+		
+			
+		ctx.beginPath();
+		ctx.shadowColor="black";
+		ctx.shadowOffsetX = 7;
+		ctx.shadowOffsetY = 7;
+		ctx.drawImage(apple,260,402,70,100);
+		ctx.closePath();
+		
+		ctx.beginPath();
+		ctx.shadowColor="black";
+		ctx.shadowOffsetX = 7;
+		ctx.shadowOffsetY = 7;
+		ctx.drawImage(avacado,369,402,70,100);
+		ctx.closePath();
+		
+		ctx.beginPath();
+		ctx.shadowColor="black";
+		ctx.shadowOffsetX = 7;
+		ctx.shadowOffsetY = 7;
+		ctx.drawImage(egg,469,402,80,100);
+		ctx.closePath();
+		
+		ctx.beginPath();
+		ctx.shadowColor="black";
+		ctx.shadowOffsetX = 7;
+		ctx.shadowOffsetY = 7;
+		ctx.drawImage(pizza,575,402,70,100);
+		ctx.closePath();
+		
+			
+		ctx.beginPath();
+		ctx.shadowColor="black";
+		ctx.shadowOffsetX = 7;
+		ctx.shadowOffsetY = 7;
+		ctx.drawImage(strawberry,675,402,70,100);
+		ctx.closePath();
+		
+		ctx.restore();
+		
+		ctx.save();
+		ctx.filter = "blur(10px)";
+		ctx.beginPath();
+		ctx.rect(225,55,340,180);
+		ctx.closePath();
+		ctx.fillStyle = "white";
+		ctx.fill();
+		ctx.restore();
+		
+		ctx.save();
+		 ctx.font = 'bold 100px "Slackey"';
+		var text4 = "Food"
+		var text5 = "Fall";
+		ctx.fillText(text4, 241,147);
+		ctx.fillText(text5, 275,210);
+		
+		ctx.restore();
+		
+		ctx.save();
+		ctx.beginPath();
+		ctx.rect(69,274,550,100);
+		ctx.closePath();
+		ctx.fillStyle = "white";
+		ctx.fill();
+		ctx.restore();
+		
+		ctx.save();
+		var text = "CLICK ANYWHERE TO START!!!!!";
+		ctx.font = 'bold 35px "Slackey"'
+		ctx.beginPath();
+		ctx.fillText(text,70,553);
+		ctx.closePath();
+		
+		ctx.restore();
+		
+		
+		ctx.save();
+	
+		ctx.shadowColor="blue";
+		ctx.shadowOffsetX = 1;
+		ctx.shadowOffsetY = 1;
+		var text2 = " Each good catch increases your score+++++"
+		var text3 = " Avoid pizza to win----";
+		ctx.fillText(text2,70,301);
+		ctx.fillText(text3,70,350);
+		ctx.restore();
+		  //ctx.fillRect(114, 240, 600,70);
+		  
+			
+		
+		 ctx.font = 'bold 20px "Slackey"';
+		  ctx.fillStyle = "black"; // change the color here
+		  //ctx.fillText(text, 125, 290); // CHANGE THE LOCATION HERE
+
+	}
+
+	/////////////////////////////
+
+	function drawLoserScreen() {
+
+		//ctx.drawImage(bkgdend, 0,0,canvas.width, canvas.height);
+		ctx.save();
+		ctx.drawImage(end2,0,0);
+		ctx.restore();
+		
+		ctx.beginPath();
+		ctx.rect(235,191,327,45);
+		ctx.closePath();
+		ctx.fillStyle = "white";
+		ctx.fill();
+		
+			
+		  var text1 = "GAME OVER";
+		  ctx.font = 'bold 40px "Slackey"';
+		  ctx.fillStyle = "rgba(240,65,60,1.00)";
+		  ctx.fillText(text1, 264, 227); // CHANGE THE LOCATION HERE
+
+		  var text2 = "CLICK TO PLAY AGAIN!!!!";
+		  ctx.font = 'bold 40px "Slackey"';
+		  ctx.fillStyle = "black";
+		  ctx.fillText(text2, 123, 561); // CHANGE THE LOCATION HERE
+
+	}
+
+		
+	function spawnThing() {
+		if (youLose === 1 || startGame === 0) return;
+
+		var thing = new Object();
+
+		var n = Math.floor(Math.random() * food.length);
+		var x = Math.random() * 300 + 250;
+		var y = canvas.height + 50;
+
+		var angle = (Math.random() * 0.5) + 1.3;
+		var speed = 13 + Math.random() * 2;
+
+		var spx = Math.cos(angle) * speed;
+		var spy = -Math.abs(Math.sin(angle) * speed);
+
+		var w = 50;
+		var h = 50;
+
+		var e = (n === 0 || n === 8) ? -1 : 2;
+
+		thing.n = n;
+		thing.x = x;
+		thing.y = y;
+		thing.w = w;
+		thing.h = h;
+		thing.rt = 0;
+		thing.spx = spx;
+		thing.spy = spy;
+		thing.e = e;
+
+		things.push(thing);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+/////////////////////////////////////////////////////////////////////
+// INITIALIZE THE STARTING FUNCTION
+
+function setup() {
+
+/////////////////////////////////////////////////////////////////////
+// DECLARE STARTING VALUES OF GLOBAL VARIABLES
+
+counter = 0;
+mouseX = canvas.width/2;
+mouseY = canvas.height/2;
+	
+	
+	
+//////////// >>> NEW 
+
+resetGame();	
+
+/////////////////////////////////////////////////////////////////////
+// CALL SUBSEQUENT FUNCTIONS, as many as you need
+
+ctx.save();
+	ctx.beginPath();
+	ctx.rect(0,0,800,600);
+	ctx.closePath();
+	ctx.fillStyle ="pink";
+	ctx.restore();
+/////////// >>> NEW 
+//start spawning things over time
+setInterval(spawnThing,1000);//every 1000ms(1 second)
+//createThings();
+
+clear(); // COVER TRANSPARENT CANVAS OR CLEAR CANVAS
+
+draw(); // THIS IS WHERE EVERYTHING HAPPENS
+
+}
+
+////////////////////////////////////////////////////////////////////
+// CLEAR THE CANVAS FOR ANIMATION
+// USE THIS AREA TO MODIFY BKGD
+
+function clear() {
+
+ctx.clearRect(0,0,canvas.width, canvas.height);
+ctx1.clearRect(0,0,canvas.width, canvas.height);
+ctx2.clearRect(0,0,canvas.width, canvas.height);
+
+// clear additional ctxs here if you have more than canvas1
+
+}
+
+////////////////////////////////////////////////////////////////////
+// THIS IS WHERE EVERYTHING HAPPENS
+
+function draw() {
+
+counter += 0.1; // EASIER FOR SINE COSINE FUNCTIONS
+
+if (counter > Math.PI*200) { counter = 0; } // RESET COUNTER
+
+clear(); // USE THIS TO REFRESH THE FRAME AND CLEAR CANVAS
+
+////////////////////////////////////////////////////////////////////
+// >>>START HERE>>>START HERE>>>START HERE>>>START HERE>>>START HERE
+
+
+
+ 
+if (startGame == 0 && youLose == 0) {
+	
+				drawStartScreen();
+				
+} 
+
+if (startGame == 1 && youLose == 0) {
+	
+				drawBkgd(); // LAYER 0
+								
+				drawThings(); // LAYER 1
+						
+				checkThings();
+				
+				drawButterfly(); // LAYER 2
+				
+} 
+
+if (startGame == 1 && youLose == 1) {
+	
+				drawLoserScreen();
+				
+}
+	
+	
+///// SCORE BOARD
+
+      ctx.save();
+	  
+	  ctx.fillStyle = "rgba(255,255,255,0.8)";
+	  ctx.fillRect(20, 10, 570, 30);
+	  
+      var text1 = "TIMER = " + Math.round(timer) + " | LEVEL = " + level + " | SCORE = " + globalScore + " | THINGS = " + things.length+"| PizzaCaught = " + pizzaCaught  ;
+      ctx.font = 'bold 15px "Slackey"';
+      ctx.fillStyle = "black";
+      ctx.shadowColor = 'rgb(255,255,0)';
+      ctx.shadowBlur = 10;
+      ctx.shadowOffsetX = 3;
+      ctx.shadowOffsetY = 3;
+      ctx.fillText(text1, 25, 30); // CHANGE THE LOCATION HERE
+      ctx.restore(); 
+ 
+
+
+
+
+ 
+
+// <<<END HERE<<<END HERE<<<END HERE<<<END HERE<<<END HERE<<<END HERE
+///////////////////////////////////////////////////////////////////
+
+// CREDITS
+
+ctx.save();
+var credits = "Sneha, Game, FMX 310, SP 2025";
+ctx.font = 'bold 12px Helvetica';
+ctx.fillStyle = "rgba(0,0,0,1)"; // change the color here
+ctx.shadowColor = "rgba(255,255,255,1)"; // change shadow color here
+ctx.shadowBlur = 12;
+ctx.shadowOffsetX = 2;
+ctx.shadowOffsetY = 2;
+ctx.fillText(credits, 10, canvas.height - 10); // CHANGE THE LOCATION HERE
+ctx.restore();
+
+//////////////////////////////////////////////////////////////////
+// HTML DISPLAY FIELD FOR TESTING PURPOSES
+
+display.innerHTML = Math.round(mouseX) + " || " + Math.round(mouseY) + " || counter = " + Math.round(counter);
+
+/////////////////////////////////////////////////////////////////
+// LAST LINE CREATES THE ANIMATION
+
+requestAnimFrame(draw); // CALLS draw() every nth of a second
+
+}
+
+</script>
+
+</body>
+</html>
