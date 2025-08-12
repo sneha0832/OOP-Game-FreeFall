@@ -1,7 +1,7 @@
 # 🎮 Game Title: Free Fall
 
 ## 📝 Project Description
-Free Fall is a browser-based game developed using HTML, CSS, and JavaScript, applying Object-Oriented Programming (OOP) principles to structure the code. Players control a basket to catch healthy fruits and avoid unhealthy items like pizza. The game includes:
+Free Fall is a browser-based game developed using ** HTML, CSS, and JavaScript **, applying Object-Oriented Programming (OOP) principles to structure the code. Players control a basket to catch healthy fruits and avoid unhealthy items like pizza. The game includes:
 
 1. A scoring system  
 2. Time-limited gameplay
